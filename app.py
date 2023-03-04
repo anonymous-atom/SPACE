@@ -1,12 +1,10 @@
-from analysis_forecasy_runf import fit_model
+import dash_bootstrap_components as dbc
+import plotly.io as pio
+from dash import Dash, dcc, html
+
 from analysis_forecasy_runf import df
 from analysis_forecasy_runf import df_year
-import pandas as pd
-from dash import Dash, dcc, html
-import plotly.io as pio
-import dash_bootstrap_components as dbc
-from dash_bootstrap_components._components.Container import Container
-from dash_bootstrap_components._components.Row import Row
+from analysis_forecasy_runf import fit_model
 
 pio.renderers.default = "browser"
 
@@ -81,7 +79,7 @@ def create_pred_plot():
 
 # Create a cool website with all the plots above
 app = Dash(__name__, external_stylesheets=[dbc.themes.MORPH])
-
+server = app.server
 search_bar = dbc.Row(
     [
         dbc.Col(dbc.Input(type="search", placeholder="Search", size="md")),
