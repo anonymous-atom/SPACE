@@ -204,8 +204,6 @@ def toggle_navbar_collapse(n, is_open):
         return not is_open
     return is_open
 
-
+import os
 if __name__ == '__main__':
-    Host = '0.0.0.0'
-    Port = 8050
-    app.run_server(host=Host, port=Port, debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
