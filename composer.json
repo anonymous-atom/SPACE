@@ -1,0 +1,14 @@
+{
+    "name": "hostinger/SPACE",
+    "description": "SPACE",
+    "require": {
+        "slim/slim": "^2.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "karun",
+            "email": "mailto.karun.py@gmail.com"
+        }
+    ]
+}
