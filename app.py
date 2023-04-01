@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 import plotly.io as pio
-from dash import Dash, dcc, html
+from dash import Dash, dcc, html, Output
+from dash.dcc import Input
 
 from analysis_forecasy_runf import df
 from analysis_forecasy_runf import df_year
@@ -85,7 +86,7 @@ search_bar = dbc.Row(
         dbc.Col(dbc.Input(type="search", placeholder="Search", size="md")),
         dbc.Col(
             dbc.Button("Search", color="primary", className="me-md-2", id="search-button", n_clicks=0, size="md"),
-            width="auto", style={"padding": "10px"}
+            width="auto", style={"padding": "10px", "border-radius": "10px"}
         ),
     ],
     className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
@@ -100,9 +101,9 @@ navbar = dbc.Navbar(
             # Make sure everything is centered
             dbc.Row(
                 [
-                    dbc.Col(html.Img(src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg",
-                                     height="30px")),
-                    dbc.Col(dbc.NavbarBrand("NASA NEO Dashboard", className="ms-2")),
+                    dbc.Col(html.Img(src="https://i.ibb.co/hdhXzL9/nea-ai-logo.png", height="80px")),
+                    #dbc.Col(html.Img(src="https://i.ibb.co/WvWg8dH/Asteroid-PNG-Background.png", height="80px")),
+                    dbc.Col(dbc.NavbarBrand(" (SPACE) NEO Dashboard", className="ms-2")),
                 ],
                 align="center",
                 className="g-0",
@@ -110,7 +111,7 @@ navbar = dbc.Navbar(
         ),
         dbc.NavbarToggler(id="navbar-toggler"),
         dbc.Collapse(search_bar, id="navbar-collapse", navbar=True),
-    ]
+    ], color="dark", dark=True, sticky="top", style={"padding": "10px 10px 10px 10px", "margin": "10px 10px 10px 10px", "border-radius": "10px"}
 )
 
 breadcrumb = dbc.Breadcrumb(
@@ -128,7 +129,7 @@ breadcrumb = dbc.Breadcrumb(
 # Fig1 and Fig2
 figdash1 = dbc.Card(
     [
-        dbc.CardHeader("Figure 1"),
+        dbc.CardHeader("Figure 3"),
 
         dbc.CardBody(
             [
@@ -145,7 +146,7 @@ figdash1 = dbc.Card(
 )
 figdash2 = dbc.Card(
     [
-        dbc.CardHeader("Figure 1"),
+        dbc.CardHeader("Figure 2"),
 
         dbc.CardBody(
             [
@@ -162,39 +163,100 @@ figdash2 = dbc.Card(
 
     ], color="primary", outline=True
 )
+
+
+# Fig3
+plot_ = [
+    html.H5("Future Forecast", className="card-title"),
+    html.P(
+        "This is a plot of the Holt-Winters model. The Holt-Winters model is a time series model that is " \
+        "used to predict future values based on past values. The model is trained on the data from 2010 " \
+        "to 2022. The model is then used to predict the number of NEOs in 2022 and 2023. The model is " \
+        "able to predict the number of NEOs in 2019 and 2020 quite well.",
+        className="card-text",
+    ),
+    dcc.Graph(figure=create_pred_plot()),
+]
 figdash3 = dbc.Card(
     [
         dbc.CardHeader("Figure 1"),
 
         dbc.CardBody(
-            [
-                html.H5("Holt-Winters Model", className="card-title"),
-                html.P(
-                    "This is a plot of the Holt-Winters model. The Holt-Winters model is a time series model that is "
-                    "used to predict future values based on past values. The model is trained on the data from 2010 "
-                    "to 2018. The model is then used to predict the number of NEOs in 2019 and 2020. The model is "
-                    "able to predict the number of NEOs in 2019 and 2020 quite well.",
-                    className="card-text",
-                ),
-                dcc.Graph(figure=create_pred_plot()),
-            ]
+            plot_
         )
 
     ], color="primary", outline=True
 )
+
+width_ = [
+
+    #Initial plots
+    dbc.Col(figdash1, width=6),
+    dbc.Col(figdash2, width=6),
+
+]
 cards1x2 = dbc.Row(
-    [
-        dbc.Col(figdash1, width=6),
-        dbc.Col(figdash2, width=6),
-    ]
+    width_, style={"padding": "20px 28px 20px 28px"}
 )
 
+#Tabs with download buttons
+tab_ = [
+    dbc.Tab(label="Figure 1", tab_id="tab-1", children=[
+        #Add download button with url
+        html.A(
+            dbc.Button("Download Source Code as .zip", color="primary", className="me-md-2", id="download-button", n_clicks=0,
+                          size="md"),
+            href="https://github.com/anonymous-atom/SPACE/archive/refs/heads/master.zip",
+            download="RepoLink",
+            target="_blank",
+        ),
+
+    ]
+            ),
+    dbc.Tab(label="Figure 2", tab_id="tab-2"),
+    dbc.Tab(label="Figure 3", tab_id="tab-3"),
+]
+tabs = dbc.Tabs(
+    tab_,
+    id="tabs",
+    active_tab="tab-1",
+)
+
+
+
+
+#Make footer with social icon images
+footer = dbc.Card(
+    [
+        dbc.CardHeader("(SPACE) Strategic AI-Powered Cosmic Exploration ",  style={"text-align": "center"}),
+        dbc.CardBody(
+            [
+                #Centre aligned Heading and Paragraph
+                html.Div(
+                    [
+                        html.H5("", className="card-title"),
+                        html.Img(src="https://i.ibb.co/WvWg8dH/Asteroid-PNG-Background.png", height="140px"),
+                        #html.Img(src="https://i.ibb.co/hdhXzL9/nea-ai-logo.png", height="140px"),https://i.ibb.co/WvWg8dH/Asteroid-PNG-Background.png
+                        html.P( "Contributors: Karun, Raghav, Vidushee, Priyo", className="card-text"),
+                    ], style={"text-align": "center"}
+                )
+            ]
+        ),
+        dbc.CardFooter("Powered By: Holt-Winters Model, Dash", style={"text-align": "center"}),
+    ], color="primary", outline=True
+)
+
+
 app.layout = html.Div(
+
     [
         navbar,
         html.Div(id="breadcrumbs", children=breadcrumb, style={"padding": "20px 28px 10px 28px"}),
         html.Div(id="figdash3", children=figdash3, style={"padding": "20px 28px 20px 28px"}),
         html.Div(id="cards1x2", children=cards1x2, style={"padding": "20px 28px 20px 28px"}),
+        html.Div(id="tabs", children=tabs, style={"padding": "20px 28px 20px 28px"}),
+        html.Div(dbc.Pagination(max_value=5, first_last=True, previous_next=True, size="sm", style={"padding": "16px 28px 16px 28px"}), id="pagination", style={"padding": "0px 28px 20px 28px"}),
+        html.Div(footer, id="footer", style={"padding": "20px 28px 20px 28px"}),
     ]
 )
 
@@ -203,6 +265,7 @@ def toggle_navbar_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
+
 
 import os
 if __name__ == '__main__':
